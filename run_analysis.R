@@ -1,6 +1,6 @@
 ## run_analysis.R
 ## rm(list=ls())  # clean the workspace  
-setwd("C:/Users/Dave/Getting_and_Cleaning_Data_Course_Project")
+setwd("C:/Users/Dave/Getting_and_Cleaning_Data_Course_Project/Getting-and-Cleaning-Data-Course-Project")
 if(!file.exists("./accelerometer")) {dir.create("./accelerometer")}  ## create data directory if it does not exist
 dataset_url <- "https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip"
 download.file(dataset_url, destfile = "./accelerometer/accelerometer.zip")  ## save in working directory
@@ -118,3 +118,4 @@ library(plyr)   ## load package 'plyr'
 df <-aggregate(. ~subject + activity, data_of_int, mean)
 df<-df[order(df$subject,df$activity),]   ## order/sort the results by subject and then activity
 write.table(df, file = "tidydataset.txt",row.name=FALSE)
+
