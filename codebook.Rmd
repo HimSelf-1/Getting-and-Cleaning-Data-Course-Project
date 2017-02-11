@@ -1,0 +1,244 @@
+---
+title: "Run_Analysis.R Code Book"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Getting and Cleaning Data Course Project 
+#### The purpose of this project is to demonstrate the ability to collect, work with, and clean a data set.
+#### The goal is to prepare tidy data that can be used for later analysis
+##Step 1.       Merge the training and the test sets to create one data set.
+ 1.  Create data directory if it does not exist
+ 2.  Download data:
+     ("https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip")
+ 3.  Read in the data into tables - NOTE:  the suffix _train & _test refer to the group the subjects were placed in
+         
+* Subject files using *subject_train.txt* & *subject_test.txt* which contains the subject identification
+
+     * *subject_train*
+     * *subject_test*
+* Activity files using *Y_train.txt* & *Y_test.txt* which contains the activity the subject performed
+
+     * *activity_train*
+     * *activity_test*
+* Feature files using *X_train.txt* & *X_test.txt* which contains the data from the activities the subjects performed
+
+     * *feature_train*
+     * *feature_test*
+ 4. Merge the training and the test sets to create one data set
+
+* Merge like data into a single file
+* *subject_df* using files *subject_train* & *subject_test*
+* *activity_df* using files *activity_train* & *activity_test*
+* *features_df* using files *feature_train* & *feature_test*
+
+ 5. Assign names to variables from provided data set
+ 
+ * *subject_df*  assign **subject**
+ * *activity_df* assign **activity**
+ 6. Read descriptive feature names from *features.txt* into *featureNames*
+ 
+ * Rename variables in *features_df* using the feature names from column 2 of *featureNames*
+ 7. Merge columns to get a data frame for all data
+ 
+ * 1. *data_s_a* using files *subject_df* & *activity_df*
+ * 2. *total_data* using files *features_df* & *data_s_a*
+ 
+##Step 2.	Extract only the measurements on the mean and standard deviation for each measurement.
+ 1. *filter_on_names_of_int* from file *featureNames* with contain strings with mean() or std() in name of features
+ 2. Subset into *names_of_int* based on **subject** & **activity** from *filter_on_names_of_int*
+    
+    *data_of_int* is a subset of *total_data* based on *names_of_int*
+ 
+##Step 3.	Use descriptive activity names to name the activities in the data set
+
+ 1. Read descriptive activity names from *activity_labels.txt* into *activityNames*
+ 2. Factor variable **activity** in *data_of_int*
+ 3. Overwrite **activity** in *data_of_int* with descriptive activity names
+
+##Step 4.	Label the data set with descriptive variable names.
+
+Already completed in the R Script:
+                
+* Re-labeled 'activity' in 'data_of_int' with descriptive activity name
+* Read descriptive feature names from "features.txt"
+* Assigned names to variables from provided data set :"subject" & "activity"
+
+Based on the *features_info.txt* file:
+
+* Time domain signals are prefixed with a 't'; strings beginning with a 't' replaced with 'time'
+* Frequency domain signals are prefixed with an 'f'; strings beginning with an 'f' replaced with 'frequency'
+* Strings containing 'Acc' were replaced with 'Accelerometer'
+* Strings containing 'Gyro' were replaced with 'Gyroscope'
+* Strings containing 'Mag' were replaced with 'Magnitude'
+* Strings containing 'BodyBody' were replaced with 'Body_Force_Calculated'
+* Strings containing 'mean()' were replaced with 'Mean_value'
+* Strings containing 'std()' were replaced with 'Standard_deviation'
+
+##Step 5.	From the data set in step 4, create a second, independent tidy data set with the average of each variable for each activity and each subject.
+
+* Load library 'plyr'
+* 1. Aggregate data *frame data_of_int* by each **activity** and **subject** into *df*, returning means for numeric variables
+* 2. Order/sort the results in *df* by subject and then activity
+* 3. Save  the tidy data *df* into *tidydataset.txt*
+
+
+
+## data table *data_of_int* with all variables along with units
+
+* contains 10,299 obs. of 68 variables
+* subject and activity variables are interger values
+* subject is an unique id for each member of the group of 30 volunteers
+* Each subject performed six activities : WALKING, WALKING_UPSTAIRS, WALKING_DOWNSTAIRS, SITTING, STANDING, LAYING
+* Variables prefixed with time have units of seconds, and those with frequency are in Hertz (Hz)
+* all variables prefixed with time or frequency are numeric measurement values from the experiment:
+
+ [1] "timeBodyAccelerometer-Mean_value-X"                                         
+ [2] "timeBodyAccelerometer-Mean_value-Y"                                         
+ [3] "timeBodyAccelerometer-Mean_value-Z"                                         
+ [4] "timeBodyAccelerometer-Standard_deviation-X"                                 
+ [5] "timeBodyAccelerometer-Standard_deviation-Y"                                 
+ [6] "timeBodyAccelerometer-Standard_deviation-Z"                                 
+ [7] "timeGravityAccelerometer-Mean_value-X"                                      
+ [8] "timeGravityAccelerometer-Mean_value-Y"                                      
+ [9] "timeGravityAccelerometer-Mean_value-Z"                                      
+[10] "timeGravityAccelerometer-Standard_deviation-X"                              
+[11] "timeGravityAccelerometer-Standard_deviation-Y"                              
+[12] "timeGravityAccelerometer-Standard_deviation-Z"                              
+[13] "timeBodyAccelerometerJerk-Mean_value-X"                                     
+[14] "timeBodyAccelerometerJerk-Mean_value-Y"                                     
+[15] "timeBodyAccelerometerJerk-Mean_value-Z"                                     
+[16] "timeBodyAccelerometerJerk-Standard_deviation-X"                             
+[17] "timeBodyAccelerometerJerk-Standard_deviation-Y"                             
+[18] "timeBodyAccelerometerJerk-Standard_deviation-Z"                             
+[19] "timeBodyGyroscope-Mean_value-X"                                             
+[20] "timeBodyGyroscope-Mean_value-Y"                                             
+[21] "timeBodyGyroscope-Mean_value-Z"                                             
+[22] "timeBodyGyroscope-Standard_deviation-X"                                     
+[23] "timeBodyGyroscope-Standard_deviation-Y"                                     
+[24] "timeBodyGyroscope-Standard_deviation-Z"                                     
+[25] "timeBodyGyroscopeJerk-Mean_value-X"                                         
+[26] "timeBodyGyroscopeJerk-Mean_value-Y"                                         
+[27] "timeBodyGyroscopeJerk-Mean_value-Z"                                         
+[28] "timeBodyGyroscopeJerk-Standard_deviation-X"                                 
+[29] "timeBodyGyroscopeJerk-Standard_deviation-Y"                                 
+[30] "timeBodyGyroscopeJerk-Standard_deviation-Z"                                 
+[31] "timeBodyAccelerometerMagnitude-Mean_value"                                  
+[32] "timeBodyAccelerometerMagnitude-Standard_deviation"                          
+[33] "timeGravityAccelerometerMagnitude-Mean_value"                               
+[34] "timeGravityAccelerometerMagnitude-Standard_deviation"                       
+[35] "timeBodyAccelerometerJerkMagnitude-Mean_value"                              
+[36] "timeBodyAccelerometerJerkMagnitude-Standard_deviation"                      
+[37] "timeBodyGyroscopeMagnitude-Mean_value"                                      
+[38] "timeBodyGyroscopeMagnitude-Standard_deviation"                              
+[39] "timeBodyGyroscopeJerkMagnitude-Mean_value"                                  
+[40] "timeBodyGyroscopeJerkMagnitude-Standard_deviation"                          
+[41] "frequencyBodyAccelerometer-Mean_value-X"                                    
+[42] "frequencyBodyAccelerometer-Mean_value-Y"                                    
+[43] "frequencyBodyAccelerometer-Mean_value-Z"                                    
+[44] "frequencyBodyAccelerometer-Standard_deviation-X"                            
+[45] "frequencyBodyAccelerometer-Standard_deviation-Y"                            
+[46] "frequencyBodyAccelerometer-Standard_deviation-Z"                            
+[47] "frequencyBodyAccelerometerJerk-Mean_value-X"                                
+[48] "frequencyBodyAccelerometerJerk-Mean_value-Y"                                
+[49] "frequencyBodyAccelerometerJerk-Mean_value-Z"                                
+[50] "frequencyBodyAccelerometerJerk-Standard_deviation-X"                        
+[51] "frequencyBodyAccelerometerJerk-Standard_deviation-Y"                        
+[52] "frequencyBodyAccelerometerJerk-Standard_deviation-Z"                        
+[53] "frequencyBodyGyroscope-Mean_value-X"                                        
+[54] "frequencyBodyGyroscope-Mean_value-Y"                                        
+[55] "frequencyBodyGyroscope-Mean_value-Z"                                        
+[56] "frequencyBodyGyroscope-Standard_deviation-X"                                
+[57] "frequencyBodyGyroscope-Standard_deviation-Y"                                
+[58] "frequencyBodyGyroscope-Standard_deviation-Z"                                
+[59] "frequencyBodyAccelerometerMagnitude-Mean_value"                             
+[60] "frequencyBodyAccelerometerMagnitude-Standard_deviation"                     
+[61] "frequencyBody_Force_CalculatedAccelerometerJerkMagnitude-Mean_value"        
+[62] "frequencyBody_Force_CalculatedAccelerometerJerkMagnitude-Standard_deviation"
+[63] "frequencyBody_Force_CalculatedGyroscopeMagnitude-Mean_value"                
+[64] "frequencyBody_Force_CalculatedGyroscopeMagnitude-Standard_deviation"        
+[65] "frequencyBody_Force_CalculatedGyroscopeJerkMagnitude-Mean_value"            
+[66] "frequencyBody_Force_CalculatedGyroscopeJerkMagnitude-Standard_deviation"    
+[67] "subject"                                                                    
+[68] "activity"  
+
+## data table *df* with all variables and summaries calculated mean along with units
+
+* contains 180 obs. of 68 variables
+* subject and activity variables are interger values
+* subject is an unique id for each member of the group of 30 volunteers
+* Each subject performed six activities : WALKING, WALKING_UPSTAIRS, WALKING_DOWNSTAIRS, SITTING, STANDING, LAYING
+* Variables prefixed with time have units of seconds, and those with frequency are in Hertz (Hz)
+* all variables prefixed with time or frequency are the numeric mean of the experiment measurements.
+
+ [1] "subject"                                                                    
+ [2] "activity"                                                
+ [3] "timeBodyAccelerometer-Mean_value-X"                                         
+ [4] "timeBodyAccelerometer-Mean_value-Y"                                         
+ [5] "timeBodyAccelerometer-Mean_value-Z"                                         
+ [6] "timeBodyAccelerometer-Standard_deviation-X"                                 
+ [7] "timeBodyAccelerometer-Standard_deviation-Y"                                 
+ [8] "timeBodyAccelerometer-Standard_deviation-Z"                                 
+ [9] "timeGravityAccelerometer-Mean_value-X"                                      
+[10] "timeGravityAccelerometer-Mean_value-Y"                                      
+[11] "timeGravityAccelerometer-Mean_value-Z"                                      
+[12] "timeGravityAccelerometer-Standard_deviation-X"                              
+[13] "timeGravityAccelerometer-Standard_deviation-Y"                              
+[14] "timeGravityAccelerometer-Standard_deviation-Z"                              
+[15] "timeBodyAccelerometerJerk-Mean_value-X"                                     
+[16] "timeBodyAccelerometerJerk-Mean_value-Y"                                     
+[17] "timeBodyAccelerometerJerk-Mean_value-Z"                                     
+[18] "timeBodyAccelerometerJerk-Standard_deviation-X"                             
+[19] "timeBodyAccelerometerJerk-Standard_deviation-Y"                             
+[20] "timeBodyAccelerometerJerk-Standard_deviation-Z"                             
+[21] "timeBodyGyroscope-Mean_value-X"                                             
+[22] "timeBodyGyroscope-Mean_value-Y"                                             
+[23] "timeBodyGyroscope-Mean_value-Z"                                             
+[24] "timeBodyGyroscope-Standard_deviation-X"                                     
+[25] "timeBodyGyroscope-Standard_deviation-Y"                                     
+[26] "timeBodyGyroscope-Standard_deviation-Z"                                     
+[27] "timeBodyGyroscopeJerk-Mean_value-X"                                         
+[28] "timeBodyGyroscopeJerk-Mean_value-Y"                                         
+[29] "timeBodyGyroscopeJerk-Mean_value-Z"                                         
+[30] "timeBodyGyroscopeJerk-Standard_deviation-X"                                 
+[31] "timeBodyGyroscopeJerk-Standard_deviation-Y"                                 
+[32] "timeBodyGyroscopeJerk-Standard_deviation-Z"                                 
+[33] "timeBodyAccelerometerMagnitude-Mean_value"                                  
+[34] "timeBodyAccelerometerMagnitude-Standard_deviation"                          
+[35] "timeGravityAccelerometerMagnitude-Mean_value"                               
+[36] "timeGravityAccelerometerMagnitude-Standard_deviation"                       
+[37] "timeBodyAccelerometerJerkMagnitude-Mean_value"                              
+[38] "timeBodyAccelerometerJerkMagnitude-Standard_deviation"                      
+[39] "timeBodyGyroscopeMagnitude-Mean_value"                                      
+[40] "timeBodyGyroscopeMagnitude-Standard_deviation"                              
+[41] "timeBodyGyroscopeJerkMagnitude-Mean_value"                                  
+[42] "timeBodyGyroscopeJerkMagnitude-Standard_deviation"                          
+[43] "frequencyBodyAccelerometer-Mean_value-X"                                    
+[44] "frequencyBodyAccelerometer-Mean_value-Y"                                    
+[45] "frequencyBodyAccelerometer-Mean_value-Z"                                    
+[46] "frequencyBodyAccelerometer-Standard_deviation-X"                            
+[47] "frequencyBodyAccelerometer-Standard_deviation-Y"                            
+[48] "frequencyBodyAccelerometer-Standard_deviation-Z"                            
+[49] "frequencyBodyAccelerometerJerk-Mean_value-X"                                
+[50] "frequencyBodyAccelerometerJerk-Mean_value-Y"                                
+[51] "frequencyBodyAccelerometerJerk-Mean_value-Z"                                
+[52] "frequencyBodyAccelerometerJerk-Standard_deviation-X"                        
+[53] "frequencyBodyAccelerometerJerk-Standard_deviation-Y"                        
+[54] "frequencyBodyAccelerometerJerk-Standard_deviation-Z"                        
+[55] "frequencyBodyGyroscope-Mean_value-X"                                        
+[56] "frequencyBodyGyroscope-Mean_value-Y"                                        
+[57] "frequencyBodyGyroscope-Mean_value-Z"                                        
+[58] "frequencyBodyGyroscope-Standard_deviation-X"                                
+[59] "frequencyBodyGyroscope-Standard_deviation-Y"                                
+[60] "frequencyBodyGyroscope-Standard_deviation-Z"                                
+[61] "frequencyBodyAccelerometerMagnitude-Mean_value"                             
+[62] "frequencyBodyAccelerometerMagnitude-Standard_deviation"                     
+[63] "frequencyBody_Force_CalculatedAccelerometerJerkMagnitude-Mean_value"        
+[64] "frequencyBody_Force_CalculatedAccelerometerJerkMagnitude-Standard_deviation"
+[65] "frequencyBody_Force_CalculatedGyroscopeMagnitude-Mean_value"                
+[66] "frequencyBody_Force_CalculatedGyroscopeMagnitude-Standard_deviation"        
+[67] "frequencyBody_Force_CalculatedGyroscopeJerkMagnitude-Mean_value"            
+[68] "frequencyBody_Force_CalculatedGyroscopeJerkMagnitude-Standard_deviation" 
